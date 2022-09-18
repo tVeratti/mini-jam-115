@@ -33,6 +33,7 @@ var has_started:bool = false
 
 
 func _ready():
+	freeze = true
 	constant_force = Wind.steady
 	
 	Wind.start.connect(self._on_wind_start)
@@ -53,7 +54,7 @@ func _process(delta):
 
 
 func _physics_process(delta):
-	if has_started:
+	if has_started and not freeze:
 		if linear_velocity.length() < 0.1:
 			end_fall()
 	else:
