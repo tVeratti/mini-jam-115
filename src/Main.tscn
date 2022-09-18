@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://ccx7jv4jqkbnc"]
+[gd_scene load_steps=9 format=3 uid="uid://ccx7jv4jqkbnc"]
 
 [ext_resource type="Script" path="res://MainCamera.gd" id="1_on8lf"]
 [ext_resource type="PackedScene" uid="uid://ctgh10j5e8his" path="res://StartOverlay.tscn" id="1_pv135"]
 [ext_resource type="Texture2D" uid="uid://dq3cgs61yyjya" path="res://assets/trace_01.png" id="2_55xw1"]
 [ext_resource type="PackedScene" uid="uid://poxyoe0h5lb8" path="res://Environment.tscn" id="3_gvj1h"]
+[ext_resource type="AudioStream" uid="uid://ewxt7kchhd83" path="res://assets/Audio/DistantThunderLoop.ogg" id="4_r7y7l"]
+[ext_resource type="AudioStream" uid="uid://bbfdtvyroaask" path="res://assets/Audio/RainLoop.ogg" id="5_pi1li"]
 
 [sub_resource type="GDScript" id="GDScript_0rfsx"]
 resource_name = "Main"
@@ -127,6 +129,14 @@ linear_accel_max = 1.5
 
 [node name="SpawnPoint" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.4641, 699.446, 101.95)
+[node name="DistantThunder" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_r7y7l")
+autoplay = true
+
+[node name="RainAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_pi1li")
+autoplay = true
+bus = &"RainBus"
 
 [connection signal="timeout" from="WindStartTimer" to="." method="_on_wind_start_timer_timeout"]
 [connection signal="timeout" from="WindEndTimer" to="." method="_on_wind_end_timer_timeout"]
