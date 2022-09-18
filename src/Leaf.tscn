@@ -13,7 +13,7 @@ signal fall_end(duration, transform)
 
 const MAX_LINEAR_SPEED:float = 50.0
 const MAX_ANGULAR_SPEED:float = 20.0
-const INPUT_FORCE:float = 0.02
+const INPUT_FORCE:float = 0.01
 const DRAG_FORCE:float = 0.5
 const WIND_FORCE:float = 0.4
 
