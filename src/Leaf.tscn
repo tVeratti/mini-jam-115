@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://bx86jwxuba0cr"]
+[gd_scene load_steps=9 format=3 uid="uid://bx86jwxuba0cr"]
 
 [ext_resource type="ArrayMesh" uid="uid://xvddsmjh0xul" path="res://assets/models/leaf.obj" id="1_7niy8"]
 
@@ -33,11 +33,13 @@ var has_started:bool = false
 
 @onready var mesh:MeshInstance3D = $MeshInstance3d
 @onready var end_timer:Timer = $EndTimer
+@onready var animation_player:AnimationPlayer = $AnimationPlayer
 
 
 func _ready():
 	freeze = true
 	constant_force = Wind.steady
+	animation_player.play(\"wiggle\")
 	
 	Wind.start.connect(self._on_wind_start)
 	Wind.end.connect(self._on_wind_end)
@@ -73,6 +75,7 @@ func start_fall():
 	freeze = false
 	set_process(true)
 	
+	animation_player.play(\"RESET\")
 	fall_start_time = Time.get_ticks_msec()
 
 
@@ -139,13 +142,54 @@ func _integrate_forces(state:PhysicsDirectBodyState3D):
 		state.angular_velocity = state.angular_velocity.normalized() * MAX_ANGULAR_SPEED
 "
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d5blw"]
+cull_mode = 2
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1ateu"]
 cull_mode = 2
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_u0q8b"]
 size = Vector3(2, 1, 1)
 
+[sub_resource type="Animation" id="Animation_vio8s"]
+resource_name = "wiggle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3d:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 0.329877, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0.174533, 0, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_djhng"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3d:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_060gt"]
+_data = {
+"RESET": SubResource("Animation_djhng"),
+"wiggle": SubResource("Animation_vio8s")
+}
+
 [node name="Leaf" type="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 axis_lock_angular_y = true
 mass = 0.01
 linear_damp = 1.2
@@ -154,7 +198,8 @@ angular_damp = 1.0
 script = SubResource("GDScript_ls7ra")
 
 [node name="MeshInstance3d" type="MeshInstance3D" parent="."]
-transform = Transform3D(-12, 0, -1.04907e-06, 0, 12, 0, 1.04907e-06, 0, -12, -0.26159, 0, 0)
+transform = Transform3D(14, 0, 0, 0, 14, 0, 0, 0, 14, 0.230914, 0, 0)
+material_override = SubResource("StandardMaterial3D_d5blw")
 mesh = ExtResource("1_7niy8")
 surface_material_override/0 = SubResource("StandardMaterial3D_1ateu")
 
@@ -164,5 +209,10 @@ shape = SubResource("BoxShape3D_u0q8b")
 [node name="EndTimer" type="Timer" parent="."]
 wait_time = 2.0
 one_shot = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_060gt")
+}
 
 [connection signal="timeout" from="EndTimer" to="." method="_on_end_timer_timeout"]

@@ -59,6 +59,7 @@ func new_leaf() -> void:
 	var leaf_origin:Vector3 = spawn_marker.global_transform.origin
 	var leaf_transform = Transform3D(Basis(), leaf_origin)
 	leaf.set_global_transform(leaf_transform)
+	leaf.rotation = Vector3(60, 90, 70)
 	
 	leaf.fall_end.connect(self._on_lead_fall_end)
 	
@@ -103,8 +104,8 @@ script = SubResource("GDScript_0rfsx")
 [node name="Interface" type="CanvasLayer" parent="."]
 
 [node name="StartOverlay" parent="Interface" instance=ExtResource("1_pv135")]
-offset_right = 8128.0
-offset_bottom = 4931.0
+offset_right = 11584.0
+offset_bottom = 6875.0
 
 [node name="WindStartTimer" type="Timer" parent="."]
 one_shot = true
@@ -134,7 +135,7 @@ linear_accel_max = 1.5
 [node name="Environment" parent="." instance=ExtResource("3_gvj1h")]
 
 [node name="SpawnPoint" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 109.885, 710.079, -103.739)
+transform = Transform3D(0.859558, -0.511038, 0, 0.511038, 0.859558, 0, 0, 0, 1, -116.982, 685.517, -60.0982)
 
 [node name="DistantThunder" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_r7y7l")
@@ -146,7 +147,7 @@ autoplay = true
 
 [node name="WindAudio" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_utmaa")
-volume_db = -15.0
+volume_db = -10.0
 
 [node name="MusicAudio" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_jkd06")
