@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bx86jwxuba0cr"]
+[gd_scene load_steps=9 format=3 uid="uid://bx86jwxuba0cr"]
 
 [ext_resource type="ArrayMesh" uid="uid://xvddsmjh0xul" path="res://assets/models/leaf.obj" id="1_7niy8"]
 [ext_resource type="Material" uid="uid://cnj86pkqox8ex" path="res://assets/materials/shade4.tres" id="1_dr0mg"]
@@ -141,9 +141,11 @@ func _integrate_forces(state:PhysicsDirectBodyState3D):
 		state.angular_velocity = state.angular_velocity.normalized() * MAX_ANGULAR_SPEED
 "
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_n05i3"]
-height = 0.2
-radius = 1.0
+[sub_resource type="SphereShape3D" id="SphereShape3D_a1vjg"]
+radius = 0.1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b0fwr"]
+size = Vector3(2, 0.1, 1)
 
 [sub_resource type="Animation" id="Animation_djhng"]
 length = 0.001
@@ -197,8 +199,24 @@ transform = Transform3D(14, 0, 0, 0, 14, 0, 0, 0, 14, 0.230914, 0, 0)
 material_override = ExtResource("1_dr0mg")
 mesh = ExtResource("1_7niy8")
 
+[node name="CollisionShape3d2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.558088)
+shape = SubResource("SphereShape3D_a1vjg")
+
+[node name="CollisionShape3d3" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.544519)
+shape = SubResource("SphereShape3D_a1vjg")
+
+[node name="CollisionShape3d4" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.03566, 0, -0.00572306)
+shape = SubResource("SphereShape3D_a1vjg")
+
+[node name="CollisionShape3d5" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0121, 0, -0.00251973)
+shape = SubResource("SphereShape3D_a1vjg")
+
 [node name="CollisionShape3d" type="CollisionShape3D" parent="."]
-shape = SubResource("CylinderShape3D_n05i3")
+shape = SubResource("BoxShape3D_b0fwr")
 
 [node name="EndTimer" type="Timer" parent="."]
 wait_time = 2.0
