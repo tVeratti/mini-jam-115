@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://bx86jwxuba0cr"]
+[gd_scene load_steps=8 format=3 uid="uid://bx86jwxuba0cr"]
 
-[ext_resource type="ArrayMesh" uid="uid://xvddsmjh0xul" path="res://assets/models/leaf.obj" id="1_7niy8"]
+[ext_resource type="ArrayMesh" uid="uid://c8iaklemp838f" path="res://assets/models/leaf.obj" id="1_7niy8"]
+[ext_resource type="Material" uid="uid://cnj86pkqox8ex" path="res://assets/materials/shade4.tres" id="1_dr0mg"]
 
 [sub_resource type="GDScript" id="GDScript_ls7ra"]
 resource_name = "Leaf"
@@ -142,14 +143,23 @@ func _integrate_forces(state:PhysicsDirectBodyState3D):
 		state.angular_velocity = state.angular_velocity.normalized() * MAX_ANGULAR_SPEED
 "
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d5blw"]
-cull_mode = 2
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1ateu"]
-cull_mode = 2
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_u0q8b"]
 size = Vector3(2, 1, 1)
+
+[sub_resource type="Animation" id="Animation_djhng"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3d:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_vio8s"]
 resource_name = "wiggle"
@@ -167,21 +177,6 @@ tracks/0/keys = {
 "values": [Vector3(0, 0, 0), Vector3(0.174533, 0, 0), Vector3(0, 0, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_djhng"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("MeshInstance3d:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_060gt"]
 _data = {
 "RESET": SubResource("Animation_djhng"),
@@ -189,7 +184,6 @@ _data = {
 }
 
 [node name="Leaf" type="RigidBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 axis_lock_angular_y = true
 mass = 0.01
 linear_damp = 1.2
@@ -199,9 +193,8 @@ script = SubResource("GDScript_ls7ra")
 
 [node name="MeshInstance3d" type="MeshInstance3D" parent="."]
 transform = Transform3D(14, 0, 0, 0, 14, 0, 0, 0, 14, 0.230914, 0, 0)
-material_override = SubResource("StandardMaterial3D_d5blw")
+material_override = ExtResource("1_dr0mg")
 mesh = ExtResource("1_7niy8")
-surface_material_override/0 = SubResource("StandardMaterial3D_1ateu")
 
 [node name="CollisionShape3d" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_u0q8b")

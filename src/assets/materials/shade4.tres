@@ -1,7 +1,8 @@
 [gd_resource type="StandardMaterial3D" format=3 uid="uid://cnj86pkqox8ex"]
 
 [resource]
+cull_mode = 2
 diffuse_mode = 3
-albedo_color = Color(0.443137, 0.443137, 0.443137, 1)
+albedo_color = Color(0.541176, 0.0823529, 0.207843, 1)
 metallic_specular = 0.0
 roughness = 0.0
