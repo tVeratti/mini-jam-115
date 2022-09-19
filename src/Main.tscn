@@ -103,8 +103,8 @@ script = SubResource("GDScript_0rfsx")
 [node name="Interface" type="CanvasLayer" parent="."]
 
 [node name="StartOverlay" parent="Interface" instance=ExtResource("1_pv135")]
-offset_right = 5824.0
-offset_bottom = 3635.0
+offset_right = 8128.0
+offset_bottom = 4931.0
 
 [node name="WindStartTimer" type="Timer" parent="."]
 one_shot = true

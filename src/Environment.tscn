@@ -13,7 +13,6 @@ sky_material = SubResource("ProceduralSkyMaterial_hodem")
 background_mode = 2
 sky = SubResource("Sky_70l18")
 tonemap_mode = 2
-volumetric_fog_density = 0.01
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_3w6hi"]
 dof_blur_far_enabled = true

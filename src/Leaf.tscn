@@ -1,5 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bx86jwxuba0cr"]
 
+[ext_resource type="ArrayMesh" uid="uid://xvddsmjh0xul" path="res://assets/models/leaf.obj" id="1_7niy8"]
+
 [sub_resource type="GDScript" id="GDScript_ls7ra"]
 resource_name = "Leaf"
 script/source = "extends RigidBody3D
@@ -30,6 +32,7 @@ var has_started:bool = false
 
 
 @onready var mesh:MeshInstance3D = $MeshInstance3d
+@onready var end_timer:Timer = $EndTimer
 
 
 func _ready():
@@ -55,8 +58,12 @@ func _process(delta):
 
 func _physics_process(delta):
 	if has_started and not freeze:
-		if linear_velocity.length() < 0.1:
-			end_fall()
+		if end_timer.is_stopped():
+			if abs(linear_velocity.y) < 0.01:
+				# Leaf has to settle for 2s before being DONE
+				end_timer.start()
+			else:
+				end_timer.stop()
 	else:
 		if linear_velocity.length() > 0.1:
 			has_started = true
@@ -87,6 +94,10 @@ func _on_wind_end():
 	wind_origin = Vector3.ZERO
 	wind_direction = Vector3.ZERO
 
+
+func _on_end_timer_timeout():
+	end_fall()
+	
 
 func _integrate_forces(state:PhysicsDirectBodyState3D):
 	var angular_speed:float = state.angular_velocity.length()
@@ -126,17 +137,13 @@ func _integrate_forces(state:PhysicsDirectBodyState3D):
 		state.linear_velocity = state.linear_velocity.normalized() * MAX_LINEAR_SPEED
 	if angular_speed > MAX_ANGULAR_SPEED:
 		state.angular_velocity = state.angular_velocity.normalized() * MAX_ANGULAR_SPEED
-	
 "
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_svv4g"]
-size = Vector2(2, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1ateu"]
 cull_mode = 2
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_u0q8b"]
-size = Vector3(2, 0.5, 1)
+size = Vector3(2, 1, 1)
 
 [node name="Leaf" type="RigidBody3D"]
 axis_lock_angular_y = true
@@ -147,8 +154,15 @@ angular_damp = 1.0
 script = SubResource("GDScript_ls7ra")
 
 [node name="MeshInstance3d" type="MeshInstance3D" parent="."]
-mesh = SubResource("PlaneMesh_svv4g")
+transform = Transform3D(-12, 0, -1.04907e-06, 0, 12, 0, 1.04907e-06, 0, -12, -0.26159, 0, 0)
+mesh = ExtResource("1_7niy8")
 surface_material_override/0 = SubResource("StandardMaterial3D_1ateu")
 
 [node name="CollisionShape3d" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_u0q8b")
+
+[node name="EndTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="timeout" from="EndTimer" to="." method="_on_end_timer_timeout"]
