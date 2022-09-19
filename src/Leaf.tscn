@@ -59,18 +59,6 @@ func _process(delta):
 		input_torque.x += INPUT_FORCE
 
 
-func _physics_process(delta):
-	if has_started and not freeze:
-		if abs(linear_velocity.y) < 0.01 or global_transform.origin.y < 100:
-			# Leaf has to settle for 2s before being DONE
-			end_timer.start()
-		else:
-			end_timer.stop()
-	else:
-		if linear_velocity.length() > 0.1:
-			has_started = true
-
-
 func start_fall():
 	freeze = false
 	set_process(true)
@@ -80,6 +68,7 @@ func start_fall():
 
 
 func end_fall():
+	print(\"END FALL\")
 	freeze = true
 	set_process(false)
 	
@@ -103,6 +92,16 @@ func _on_end_timer_timeout():
 	
 
 func _integrate_forces(state:PhysicsDirectBodyState3D):
+	if has_started:
+		if state.linear_velocity.length() < 1.0:
+			# Leaf has to settle for 2s before being DONE
+			if end_timer.is_stopped(): end_timer.start()
+		else:
+			end_timer.stop()
+	else:
+		if state.linear_velocity.length() > 0.1:
+			has_started = true
+	
 	var angular_speed:float = state.angular_velocity.length()
 	var is_flipped:bool = global_transform.basis.y.y < 0.0
 	
