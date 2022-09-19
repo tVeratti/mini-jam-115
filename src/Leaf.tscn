@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://bx86jwxuba0cr"]
 
-[ext_resource type="ArrayMesh" uid="uid://c8iaklemp838f" path="res://assets/models/leaf.obj" id="1_7niy8"]
+[ext_resource type="ArrayMesh" uid="uid://xvddsmjh0xul" path="res://assets/models/leaf.obj" id="1_7niy8"]
 [ext_resource type="Material" uid="uid://cnj86pkqox8ex" path="res://assets/materials/shade4.tres" id="1_dr0mg"]
 
 [sub_resource type="GDScript" id="GDScript_ls7ra"]
@@ -61,12 +61,11 @@ func _process(delta):
 
 func _physics_process(delta):
 	if has_started and not freeze:
-		if end_timer.is_stopped():
-			if abs(linear_velocity.y) < 0.01:
-				# Leaf has to settle for 2s before being DONE
-				end_timer.start()
-			else:
-				end_timer.stop()
+		if abs(linear_velocity.y) < 0.01 or global_transform.origin.y < 100:
+			# Leaf has to settle for 2s before being DONE
+			end_timer.start()
+		else:
+			end_timer.stop()
 	else:
 		if linear_velocity.length() > 0.1:
 			has_started = true
@@ -143,8 +142,9 @@ func _integrate_forces(state:PhysicsDirectBodyState3D):
 		state.angular_velocity = state.angular_velocity.normalized() * MAX_ANGULAR_SPEED
 "
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_u0q8b"]
-size = Vector3(2, 1, 1)
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_n05i3"]
+height = 0.2
+radius = 1.0
 
 [sub_resource type="Animation" id="Animation_djhng"]
 length = 0.001
@@ -186,6 +186,8 @@ _data = {
 [node name="Leaf" type="RigidBody3D"]
 axis_lock_angular_y = true
 mass = 0.01
+continuous_cd = true
+can_sleep = false
 linear_damp = 1.2
 angular_damp_mode = 1
 angular_damp = 1.0
@@ -197,7 +199,7 @@ material_override = ExtResource("1_dr0mg")
 mesh = ExtResource("1_7niy8")
 
 [node name="CollisionShape3d" type="CollisionShape3D" parent="."]
-shape = SubResource("BoxShape3D_u0q8b")
+shape = SubResource("CylinderShape3D_n05i3")
 
 [node name="EndTimer" type="Timer" parent="."]
 wait_time = 2.0
