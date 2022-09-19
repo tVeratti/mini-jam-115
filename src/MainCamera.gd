@@ -17,18 +17,22 @@ func _physics_process(delta):
 		var origin:Vector3 = global_transform.origin
 		var target:Vector3 = target_node.global_transform.origin + OFFSET
 		var distance = origin.distance_to(target)
-		var speed_x:float = _get_speed(abs(origin.x - target.x), MAX_X_DISTANCE)
 		
-		# Calculate z speed separately so the leaf doesn't blow behind the cam
-		var z_distance:float = origin.z - target.z
-		var speed_z:float = _get_speed(abs(z_distance), MAX_Z_DISTANCE) if z_distance > 0 else \
-			_get_speed(abs(z_distance), MIN_Z_DISTANCE)
+		if distance > 200.0:
+			global_transform.origin = target
+		else:
+			var speed_x:float = _get_speed(abs(origin.x - target.x), MAX_X_DISTANCE)
 			
-		if origin.distance_to(target) > LERP_TRESHOLD:
-			global_transform.origin = Vector3(
-				lerp(origin.x, target.x, speed_x * delta),
-				lerp(origin.y, target.y, MATCH_SPEED * delta),
-				lerp(origin.z, target.z, speed_z * delta)
+			# Calculate z speed separately so the leaf doesn't blow behind the cam
+			var z_distance:float = origin.z - target.z
+			var speed_z:float = _get_speed(abs(z_distance), MAX_Z_DISTANCE) if z_distance > 0 else \
+				_get_speed(abs(z_distance), MIN_Z_DISTANCE)
+				
+			if origin.distance_to(target) > LERP_TRESHOLD:
+				global_transform.origin = Vector3(
+					lerp(origin.x, target.x, speed_x * delta),
+					lerp(origin.y, target.y, MATCH_SPEED * delta),
+					lerp(origin.z, target.z, speed_z * delta)
 			)
 
 

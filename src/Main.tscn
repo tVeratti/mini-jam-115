@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=3 uid="uid://ccx7jv4jqkbnc"]
+[gd_scene load_steps=13 format=3 uid="uid://ccx7jv4jqkbnc"]
 
 [ext_resource type="Script" path="res://MainCamera.gd" id="1_on8lf"]
 [ext_resource type="PackedScene" uid="uid://ctgh10j5e8his" path="res://StartOverlay.tscn" id="1_pv135"]
 [ext_resource type="Texture2D" uid="uid://dq3cgs61yyjya" path="res://assets/trace_01.png" id="2_55xw1"]
+[ext_resource type="PackedScene" uid="uid://kuelexp5unet" path="res://EndOverlay.tscn" id="2_fhj3v"]
 [ext_resource type="PackedScene" uid="uid://poxyoe0h5lb8" path="res://Environment.tscn" id="3_gvj1h"]
 [ext_resource type="AudioStream" uid="uid://ewxt7kchhd83" path="res://assets/Audio/DistantThunderLoop.ogg" id="4_r7y7l"]
 [ext_resource type="AudioStream" uid="uid://bbfdtvyroaask" path="res://assets/Audio/RainLoop.ogg" id="5_pi1li"]
@@ -25,6 +26,7 @@ var state:int = States.START
 
 @onready var interface:CanvasLayer = $Interface
 @onready var start_overlay = $Interface/StartOverlay
+@onready var end_overlay = $Interface/EndOverlay
 
 @onready var camera:Camera3D = $Camera3d
 @onready var spawn_marker:Marker3D = $SpawnPoint
@@ -45,7 +47,10 @@ func _process(delta):
 	if Input.is_action_just_pressed(\"ui_accept\"):
 		if state == States.MAIN: return
 		if state == States.START: start_overlay.go_away()
-		if state == States.END: new_leaf()
+		if state == States.END:
+			new_leaf()
+			end_overlay.go_away()
+			await get_tree().create_timer(1.0).timeout
 		
 		current_leaf.start_fall()
 		_on_wind_start_timer_timeout()
@@ -69,6 +74,7 @@ func new_leaf() -> void:
 
 func _on_lead_fall_end(duration_ms:float, leaf_transform:Transform3D):
 	state = States.END
+	end_overlay.enter()
 
 
 func _on_wind_start_timer_timeout():
@@ -104,8 +110,12 @@ script = SubResource("GDScript_0rfsx")
 [node name="Interface" type="CanvasLayer" parent="."]
 
 [node name="StartOverlay" parent="Interface" instance=ExtResource("1_pv135")]
-offset_right = 11584.0
-offset_bottom = 6875.0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="EndOverlay" parent="Interface" instance=ExtResource("2_fhj3v")]
+offset_right = 1152.0
+offset_bottom = 648.0
 
 [node name="WindStartTimer" type="Timer" parent="."]
 one_shot = true
