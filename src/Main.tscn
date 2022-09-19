@@ -125,7 +125,10 @@ wait_time = 1.5
 one_shot = true
 
 [node name="Camera3d" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -116.149, 0, 0)
 current = true
+fov = 60.0
+near = 10.0
 script = ExtResource("1_on8lf")
 
 [node name="CpuParticles3d" type="CPUParticles3D" parent="Camera3d"]

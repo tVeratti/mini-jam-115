@@ -1,7 +1,7 @@
 extends Camera3D
 
 
-const OFFSET:Vector3 = Vector3(0, 2.0, 10.0)
+const OFFSET:Vector3 = Vector3(0, 2.0, 15.0)
 const LERP_TRESHOLD:float = 0.1
 const MAX_X_DISTANCE:float = 10.0
 const MAX_Z_DISTANCE:float = 10.0
