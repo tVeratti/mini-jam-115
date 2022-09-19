@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://ccx7jv4jqkbnc"]
+[gd_scene load_steps=12 format=3 uid="uid://ccx7jv4jqkbnc"]
 
 [ext_resource type="Script" path="res://MainCamera.gd" id="1_on8lf"]
 [ext_resource type="PackedScene" uid="uid://ctgh10j5e8his" path="res://StartOverlay.tscn" id="1_pv135"]
@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://poxyoe0h5lb8" path="res://Environment.tscn" id="3_gvj1h"]
 [ext_resource type="AudioStream" uid="uid://ewxt7kchhd83" path="res://assets/Audio/DistantThunderLoop.ogg" id="4_r7y7l"]
 [ext_resource type="AudioStream" uid="uid://bbfdtvyroaask" path="res://assets/Audio/RainLoop.ogg" id="5_pi1li"]
+[ext_resource type="AudioStream" uid="uid://idlvar726ikl" path="res://assets/Audio/WindOneShot.wav" id="7_utmaa"]
+[ext_resource type="AudioStream" uid="uid://os5v00wrn8bs" path="res://assets/Audio/NoirLoop.ogg" id="8_jkd06"]
 
 [sub_resource type="GDScript" id="GDScript_0rfsx"]
 resource_name = "Main"
@@ -29,6 +31,7 @@ var state:int = States.START
 
 @onready var wind_start_timer:Timer = $WindStartTimer
 @onready var wind_end_timer:Timer = $WindEndTimer
+@onready var wind_audio:AudioStreamPlayer = $WindAudio
 @onready var rain:CPUParticles3D = $Camera3d/CpuParticles3d
 
 
@@ -65,15 +68,18 @@ func new_leaf() -> void:
 
 func _on_lead_fall_end(duration_ms:float, leaf_transform:Transform3D):
 	state = States.END
-	print(duration_ms / 1000)
 
 
 func _on_wind_start_timer_timeout():
 	var origin:Vector3 = Wind.get_random_origin()
 	var direction:Vector3 = Wind.get_random_gust()
+	var duration:float = Wind.get_random_duration()
 	
 	Wind.start.emit(origin, direction)
-	wind_end_timer.start(Wind.get_random_duration())
+	wind_end_timer.start(duration)
+	
+	wind_audio.pitch_scale = 5.0 / duration
+	wind_audio.play()
 
 
 func _on_wind_end_timer_timeout():
@@ -97,8 +103,8 @@ script = SubResource("GDScript_0rfsx")
 [node name="Interface" type="CanvasLayer" parent="."]
 
 [node name="StartOverlay" parent="Interface" instance=ExtResource("1_pv135")]
-offset_right = 2304.0
-offset_bottom = 1296.0
+offset_right = 5824.0
+offset_bottom = 3635.0
 
 [node name="WindStartTimer" type="Timer" parent="."]
 one_shot = true
@@ -128,7 +134,7 @@ linear_accel_max = 1.5
 [node name="Environment" parent="." instance=ExtResource("3_gvj1h")]
 
 [node name="SpawnPoint" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.4641, 699.446, 101.95)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 109.885, 710.079, -103.739)
 
 [node name="DistantThunder" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_r7y7l")
@@ -136,6 +142,15 @@ autoplay = true
 
 [node name="RainAudio" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_pi1li")
+autoplay = true
+
+[node name="WindAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_utmaa")
+volume_db = -15.0
+
+[node name="MusicAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_jkd06")
+volume_db = -10.0
 autoplay = true
 
 [connection signal="timeout" from="WindStartTimer" to="." method="_on_wind_start_timer_timeout"]

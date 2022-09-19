@@ -43,4 +43,4 @@ static func get_random_wait() -> float:
 
 
 static func get_random_duration() -> float:
-	return randf_range(1.0, 3.0)
+	return randf_range(1.0, 4.0)
